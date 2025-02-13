@@ -90,6 +90,7 @@ impl Board {
     pub fn play(&self, moves: &[Direction]) {
         // current board from which the play starts
         let mut current_board = self.clone();
+        let mut n = 0;
         println!("{current_board}");
         for &direction in moves {
             if let Some(next) = current_board.apply(direction) {
@@ -98,6 +99,9 @@ impl Board {
 
                 // wait half a second before displaying
                 std::thread::sleep(std::time::Duration::from_millis(500));
+                // print the action
+                n+=1;
+                println!("move number {n} : {direction}");
                 // print the current board
                 println!("{current_board}");
             } else {
@@ -112,7 +116,17 @@ impl Board {
     /// Returs `true` if the given sequence of actions is a valid plan that leads to the goal state.
     pub fn is_valid_plan(&self, actions: &[Direction]) -> bool {
         let mut board = *self;
-        todo!("replay each of the moves in the actions array and see if ends in the goal state")
+        for &direction in actions{
+            if let Some(next) = board.apply(direction){
+                board = next;
+            }
+            else{
+                // Applying direction is impossible => retrun false
+                return  false
+            }
+        }
+        // All of the moves given were applied => compare the goal with the resulting board
+        self::Board::GOAL == board
     }
 }
 
@@ -251,10 +265,10 @@ mod tests {
         assert_eq!(board.position(EMPTY_CELL), (2, 0));
         assert_eq!(board.value_at(2, 0), EMPTY_CELL);
 
-        assert_eq!(board.value_at(1, 1), todo!());
-        assert_eq!(board.value_at(2, 2), todo!());
-        assert_eq!(board.position(3), todo!());
-        assert_eq!(board.position(5), todo!());
+        assert_eq!(board.value_at(1, 1), 5);
+        assert_eq!(board.value_at(2, 2), 8);
+        assert_eq!(board.position(3), (0, 2));
+        assert_eq!(board.position(5), (1, 1));
     }
 
     #[test]
@@ -265,9 +279,11 @@ mod tests {
             Some(Board::new([[1, 2, 3], [0, 5, 6], [4, 7, 8]]))
         );
         // what is the result of moving the empty cell right? was the `board` binding modified by the apply method?
-        assert_eq!(board.apply(Direction::Right), todo!());
+        assert_eq!(board.apply(Direction::Right), 
+        Some(Board::new([[1, 2, 3], [4, 5, 6], [7, 0, 8]]))
+    );
         // what is the result of moving the empty cell left?
-        assert_eq!(board.apply(Direction::Left), todo!());
+        assert_eq!(board.apply(Direction::Left), None);
     }
 
     #[test]
