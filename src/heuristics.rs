@@ -49,18 +49,8 @@ impl Heuristic {
 }
 
 fn manhattan_peer(cell:u8, (line, column):(u8, u8)) -> u8 {
-    let expected:(u8, u8) = match  cell {
-        0 => (2,2),
-        1 => (0,0),
-        2 => (0,1),
-        3 => (0,2),
-        4 => (1,0),
-        5 => (1,1),
-        6 => (1,2),
-        7 => (2,0),
-        8 => (2,1),
-        _ => panic!("Out of bands ")
-    };
+    let expected:(u8, u8) = (cell/N as u8, cell %N as u8);
+     
     line.abs_diff(expected.0) + column.abs_diff(expected.1)
 }
 
@@ -75,6 +65,6 @@ mod tests {
         let board = Board::new([[8, 7, 3], [2, 0, 5], [1, 4, 6]]);
         assert_eq!(Heuristic::Blind.estimate(&board), 0);
         assert_eq!(Heuristic::Hamming.estimate(&board), 8);
-        assert_eq!(Heuristic::Manhattan.estimate(&board), 16);
+        assert_eq!(Heuristic::Manhattan.estimate(&board),20);
     }
 }

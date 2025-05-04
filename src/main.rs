@@ -26,7 +26,8 @@ fn main() {
      } 
      */
 
-     // validates that search oes return the optimal plan on the first 20 isntances
+     // validates that search does return the optimal plan on the first 20 isntances
+     /*
      for w in 1..4{
       println!("Weight : {w}");
       
@@ -50,5 +51,9 @@ fn main() {
         println!("\n\n\n");
       }
    }     
-  
+  */
+
+  let initial_board = Board::new([[1, 2, 3],
+   [4, 8, 5],
+   [0, 7, 6]]);
 }
